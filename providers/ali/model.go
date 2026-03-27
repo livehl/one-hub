@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	// VisionModelKeywords 定义视觉模型的关键词
-	VisionModelKeywords = "-vl,qvq,vision"
+	// VisionModelKeywords 定义视觉模型的关键词（这些模型需走 multimodal-generation 接口）
+	VisionModelKeywords = "-vl,qvq,vision,qwen3.5"
 	// WebSearchSupportedModels 定义支持web_search插件的模型关键词
 	WebSearchSupportedModels = "qwen-plus,qwen-turbo,qwen-max,qwq-plus"
 )
