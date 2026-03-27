@@ -1,9 +1,7 @@
 package ali
 
 import (
-	"encoding/json"
 	"one-api/types"
-	"strings"
 )
 
 type AliError struct {
@@ -66,32 +64,6 @@ func (o *AliOutput) ToChatCompletionChoices() []types.ChatCompletionChoice {
 			continue
 		}
 
-		// 尝试将数组格式的 content 解析为 []AliMessagePart
-		// 若全为 text（无图片），则转为字符串，以兼容 qwen3.5-plus 等多模态文本模型
-		msgJson, err := json.Marshal(o.Choices[i].Message.Content)
-		if err == nil {
-			var parts []AliMessagePart
-			if json.Unmarshal(msgJson, &parts) == nil {
-				hasImage := false
-				var textParts []string
-				for _, part := range parts {
-					if part.Image != "" {
-						hasImage = true
-						break
-					}
-					if part.Text != "" {
-						textParts = append(textParts, part.Text)
-					}
-				}
-				if !hasImage {
-					// 纯文本响应，转为字符串
-					o.Choices[i].Message.Content = strings.Join(textParts, "")
-					continue
-				}
-			}
-		}
-
-		// 含图片的多模态响应，保留为 []ChatMessagePart 数组
 		o.Choices[i].Message.Content = o.Choices[i].Message.ParseContent()
 	}
 	return o.Choices
